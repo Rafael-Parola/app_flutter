@@ -10,7 +10,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
      appBar: CustomAppBar(
           title: 'Agenda de medicamentos',
-          centerTitle: false,
+          centerTitle: true,
           actions: [
             Padding(
               padding: EdgeInsets.symmetric(

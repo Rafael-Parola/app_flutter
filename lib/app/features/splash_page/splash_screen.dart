@@ -1,7 +1,9 @@
 import 'package:app_flutter/app/widget/colors/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'dart:async';
-import '../initial_page/cad_page.dart'; 
+import '../../widget/images.dart';
+import '../initial_page/register_page.dart'; 
 
 
 
@@ -44,13 +46,16 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColors.red, 
+      backgroundColor: CustomColors.green.shade400, 
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FlutterLogo(size: 100), 
-            SizedBox(height: 20),
+            SvgPicture.asset(
+            Images.splashScreen, 
+            width: 200, 
+            height: 200,
+          ),
             CircularProgressIndicator(color: Colors.white), 
           ],
         ),

@@ -12,9 +12,7 @@ class CustomColors {
   static const Color black = Color(0xFF000000);
   static const Color blackSecond = Color(0xFF1E2023);
   static const Color transparent = Color(0x00000000);
-  static const Color green = Color(0xFF24AE5B);
-  static const Color greenbutton = Color(0xFF4CAC85);
-
+  
   static const MaterialColor red = MaterialColor(
     0xFFE74742,
     <int, Color>{
@@ -47,6 +45,21 @@ class CustomColors {
     },
   );
 
+  static const MaterialColor green = MaterialColor(
+    0xFF24AE5B,
+    <int, Color>{
+      50: Color(0xFFE8F5E9),
+      100: Color(0xFFC8E6C9),
+      200: Color(0xFFA5D6A7),
+      300: Color(0xFF81C784),
+      400: Color(0xFF66BB6A),
+      500: Color(0xFF24AE5B),
+      600: Color(0xFF43A047),
+      700: Color(0xFF388E3C),
+      800: Color(0xFF2E7D32),
+      900: Color(0xFF1B5E20),
+    },
+  );
   static const MaterialColor backgroundColor =
       MaterialColor(0xFFF5F8FA, <int, Color>{});
 }
