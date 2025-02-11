@@ -1,8 +1,7 @@
 import 'package:app_flutter/app/widget/colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-
-import '../home/home_page.dart'; 
+import '../initial_page/cad_page.dart'; 
 
 
 
@@ -37,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(Duration(seconds: 5), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()), 
+        MaterialPageRoute(builder: (context) => RegisterPage()), 
       );
     });
   }
@@ -45,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColors.blue, 
+      backgroundColor: CustomColors.red, 
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -9,7 +9,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
      appBar: CustomAppBar(
-          title: 'Lets',
+          title: 'Agenda de medicamentos',
           centerTitle: false,
           actions: [
             Padding(
