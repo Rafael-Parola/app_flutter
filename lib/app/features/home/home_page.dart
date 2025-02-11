@@ -1,32 +1,31 @@
 import 'package:flutter/material.dart';
 import '../../widget/cutom_app_bar/custom_app_bar.dart';
-import '../../widget/spaces/resizer.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
     return Scaffold(
-     appBar: CustomAppBar(
-          title: 'Agenda de medicamentos',
-          centerTitle: true,
-          actions: [
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: Resizer.relativeWidth(context, 4),
-              ),
-              
-            ),
-          ],
-        ),
+      key: _scaffoldKey,
+      appBar: CustomAppBar(
+        title: 'Agenda de medicamentos',
+        centerTitle: true,
+        leadingIcon: Icons.menu,
+        onPressedleading: () {
+          _scaffoldKey.currentState?.openDrawer();
+        },
+      ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(color: Colors.blue),
-              child: Text('Menu Lateral', style: TextStyle(color: Colors.white, fontSize: 24)),
+              child: Text('Menu Lateral',
+                  style: TextStyle(color: Colors.white, fontSize: 24)),
             ),
             ListTile(
               title: Text('Opção 1'),
