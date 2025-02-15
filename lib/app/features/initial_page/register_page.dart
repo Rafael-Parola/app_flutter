@@ -36,7 +36,6 @@ class _RegisterPageState extends State<RegisterPage> {
         _nomeController, _dataController, _emailController);
 
     if (await controller.hasData()) {
-      // Se os dados já estão armazenados, vamos tentar validar
       if (_formKey.currentState?.validate() ?? false) {
         _continueRegistration();
       }
