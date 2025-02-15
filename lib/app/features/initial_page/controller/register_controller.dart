@@ -6,12 +6,11 @@ class RegisterController with ChangeNotifier {
 
   Future<void> saveData(String key, String value) async {
     await _storage.write(key: key, value: value);
-   
   }
 
   Future<String?> getData(String key) async {
     final value = await _storage.read(key: key);
-     
+
     return value;
   }
 
@@ -19,10 +18,29 @@ class RegisterController with ChangeNotifier {
     await _storage.deleteAll();
   }
 
-  Future<void> initializeForm(TextEditingController nomeController, TextEditingController dataController, TextEditingController emailController) async {
-    nomeController.text = await getData('nome') ?? '';
-    dataController.text = await getData('data') ?? '';
-    emailController.text = await getData('email') ?? '';
+  Future<void> initializeForm(
+      TextEditingController nomeController,
+      TextEditingController dataController,
+      TextEditingController emailController) async {
+
+    final nome = await getData('nome');
+    final data = await getData('data');
+    final email = await getData('email');
+
+    if (nome != null && data != null && email != null) {
+      nomeController.text = nome;
+      dataController.text = data;
+      emailController.text = email;
+
+
+      notifyListeners();
+      return;
+    }
+
+    
+    nomeController.text = '';
+    dataController.text = '';
+    emailController.text = '';
     notifyListeners();
   }
 

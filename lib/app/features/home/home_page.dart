@@ -6,16 +6,16 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
-      key: _scaffoldKey,
+      key: scaffoldKey,
       appBar: CustomAppBar(
         title: 'Agenda de medicamentos',
         centerTitle: true,
         leadingIcon: Icons.menu,
         onPressedleading: () {
-          _scaffoldKey.currentState?.openDrawer();
+          scaffoldKey.currentState?.openDrawer();
         },
       ),
       drawer: Drawer(

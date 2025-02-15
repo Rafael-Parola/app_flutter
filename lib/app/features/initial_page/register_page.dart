@@ -32,11 +32,14 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future<void> _initializeForm() async {
     final controller = Provider.of<RegisterController>(context, listen: false);
-    await controller.initializeForm(_nomeController, _dataController, _emailController);
+    await controller.initializeForm(
+        _nomeController, _dataController, _emailController);
 
     if (await controller.hasData()) {
-      // Avança automaticamente se os dados estiverem presentes
-      _continueRegistration();
+      // Se os dados já estão armazenados, vamos tentar validar
+      if (_formKey.currentState?.validate() ?? false) {
+        _continueRegistration();
+      }
     }
   }
 
@@ -49,7 +52,8 @@ class _RegisterPageState extends State<RegisterPage> {
     OverlayEntry overlayEntry;
     overlayEntry = OverlayEntry(
       builder: (context) => CustomAlertDialog(
-        message: "Cadastro realizado com sucesso \n Você será redirecionado em instantes",
+        message:
+            "Cadastro realizado com sucesso \n Você será redirecionado em instantes",
         backgroundColor: CustomColors.green,
         textColor: CustomColors.white,
         duration: 3,
@@ -61,6 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
         },
       ),
     );
+    // ignore: use_build_context_synchronously
     Overlay.of(context).insert(overlayEntry);
   }
 
@@ -131,17 +136,20 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   SizedBox(height: 16),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: CustomButton(
-                      text: 'Continuar',
-                      width: double.infinity, 
-                      backgroundColor: CustomColors.green.shade600,
-                      textColor: CustomColors.white,
-                      borderRadius: 12.0,
-                      fontSize: 16.0,
-                      onPressed: _continueRegistration,
-                    ),
-                  ),
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: CustomButton(
+                        text: 'Continuar',
+                        width: double.infinity,
+                        backgroundColor: CustomColors.green.shade600,
+                        textColor: CustomColors.white,
+                        borderRadius: 12.0,
+                        fontSize: 16.0,
+                        onPressed: () {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            _continueRegistration();
+                          }
+                        },
+                      )),
                 ],
               ),
             ),
