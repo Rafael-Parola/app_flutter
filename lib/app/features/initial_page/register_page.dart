@@ -95,7 +95,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 children: <Widget>[
                   CustomTextField(
                     controller: _nomeController,
-                    labelText: 'Nome Completo',
+                    labelText: 'Nome Completo*',
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Por favor, insira o nome completo.';
@@ -106,7 +106,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   SizedBox(height: 16),
                   CustomTextField(
                     controller: _dataController,
-                    labelText: 'Data de Nascimento',
+                    labelText: 'Data de Nascimento*',
                     hintText: 'DD/MM/AAAA',
                     keyboardType: TextInputType.datetime,
                     inputFormatters: [DateInputFormatter()],
@@ -120,7 +120,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   SizedBox(height: 16),
                   CustomTextField(
                     controller: _emailController,
-                    labelText: 'E-mail',
+                    labelText: 'E-mail*',
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
