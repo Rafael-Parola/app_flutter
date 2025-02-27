@@ -1,33 +1,138 @@
 import 'package:flutter/material.dart';
-import 'package:app_flutter/app/features/home/home_page.dart';
+import 'package:provider/provider.dart';
 import '../../widget/cutom_app_bar/custom_app_bar.dart';
+import 'controller/calendar_controller.dart';
 
 class AddCalendarPage extends StatefulWidget {
   const AddCalendarPage({super.key});
 
   @override
-  AddCalendarPageState createState() => AddCalendarPageState();
+  State<AddCalendarPage> createState() => _AddCalendarPageState();
 }
 
-class AddCalendarPageState extends State<AddCalendarPage> {
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+class _AddCalendarPageState extends State<AddCalendarPage> {
+  late AddCalendarController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AddCalendarController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: CustomAppBar(
-        title: 'Criar agenda',
-        centerTitle: true,
-        leadingIcon: Icons.arrow_back_rounded,
-        onPressedleading: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomePage()),
-          );
-        },
+    return ChangeNotifierProvider(
+      create: (_) => _controller,
+      child: Scaffold(
+        appBar: CustomAppBar(
+          title: 'Criar agenda',
+          centerTitle: true,
+          leadingIcon: Icons.arrow_back_rounded,
+          onPressedleading: () => Navigator.pop(context),
+        ),
+        body: Consumer<AddCalendarController>(
+          builder: (context, controller, child) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Data de início:",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            ElevatedButton(
+                              onPressed: () =>
+                                  controller.selectDate(context, true),
+                              child: Text(controller
+                                  .getFormattedDate(controller.startDate)),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Data de término:",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            ElevatedButton(
+                              onPressed: () =>
+                                  controller.selectDate(context, false),
+                              child: Text(controller
+                                  .getFormattedDate(controller.endDate)),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    "Dias da semana:",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  Wrap(
+                    spacing: 8.0,
+                    children:
+                        List.generate(controller.weekDays.length, (index) {
+                      return FilterChip(
+                        label: Text(controller.weekDays[index]),
+                        selected: controller.selectedDays[index],
+                        onSelected: (selected) => controller.toggleDay(index),
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    "Horário do medicamento:",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => controller.selectTime(context),
+                    child: Text(controller.getFormattedTime(context)),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+        bottomNavigationBar: Padding(
+          padding:
+              const EdgeInsets.only(bottom: 30, left: 20, right: 20, top: 1),
+          child: SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: ElevatedButton(
+              onPressed: () => _controller.saveSchedule(context),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+                textStyle: const TextStyle(fontSize: 18),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text("Salvar Agenda"),
+            ),
+          ),
+        ),
       ),
-      body: Center(child: Text('Conteúdo da página adição de agenda')),
     );
   }
 }
