@@ -70,7 +70,7 @@ class HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Agenda #${schedule['id']}",
+                          schedule['medicationName'] ?? 'Nome não informado',
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

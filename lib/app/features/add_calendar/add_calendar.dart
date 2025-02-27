@@ -12,6 +12,7 @@ class AddCalendarPage extends StatefulWidget {
 
 class _AddCalendarPageState extends State<AddCalendarPage> {
   late AddCalendarController _controller;
+  final TextEditingController _medicationController = TextEditingController();
 
   @override
   void initState() {
@@ -21,6 +22,7 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
 
   @override
   void dispose() {
+    _medicationController.dispose();
     super.dispose();
   }
 
@@ -42,13 +44,31 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(
+                    "Nome do medicamento:",
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: _medicationController,
+                    decoration: InputDecoration(
+                      hintText: "Digite o nome do medicamento",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   Row(
                     children: [
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               "Data de início:",
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
@@ -67,7 +87,7 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               "Data de término:",
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
@@ -84,7 +104,7 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  Text(
+                  const Text(
                     "Dias da semana:",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
@@ -100,7 +120,7 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
                     }),
                   ),
                   const SizedBox(height: 20),
-                  Text(
+                  const Text(
                     "Horário do medicamento:",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
@@ -120,7 +140,10 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
             width: double.infinity,
             height: 50,
             child: ElevatedButton(
-              onPressed: () => _controller.saveSchedule(context),
+              onPressed: () {
+                _controller.setMedicationName(_medicationController.text);
+                _controller.saveSchedule(context);
+              },
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
                 textStyle: const TextStyle(fontSize: 18),

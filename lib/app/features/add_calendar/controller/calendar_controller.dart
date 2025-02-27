@@ -1,17 +1,15 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 
 class AddCalendarController extends ChangeNotifier {
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
-
   List<bool> selectedDays = List.generate(7, (index) => false);
   DateTime? startDate;
   DateTime? endDate;
   TimeOfDay? selectedTime;
+  String medicationName = ""; // Nome do medicamento
 
   final List<String> weekDays = [
     "Dom",
@@ -22,6 +20,13 @@ class AddCalendarController extends ChangeNotifier {
     "Sex",
     "Sáb"
   ];
+
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+
+  void setMedicationName(String name) {
+    medicationName = name;
+    notifyListeners();
+  }
 
   Future<void> selectDate(BuildContext context, bool isStart) async {
     DateTime initialDate =
@@ -45,9 +50,16 @@ class AddCalendarController extends ChangeNotifier {
   }
 
   Future<void> selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
+    TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: selectedTime ?? TimeOfDay.now(),
+      builder: (BuildContext context, Widget? child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
+        );
+      },
+      helpText: 'Selecionar horário',
     );
 
     if (picked != null) {
@@ -64,7 +76,7 @@ class AddCalendarController extends ChangeNotifier {
   String getFormattedDate(DateTime? date) {
     return date == null
         ? "Selecionar data"
-        : DateFormat("dd/MM/yyyy").format(date);
+        : "${date.day}/${date.month}/${date.year}";
   }
 
   String getFormattedTime(BuildContext context) {
@@ -73,18 +85,17 @@ class AddCalendarController extends ChangeNotifier {
         : selectedTime!.format(context);
   }
 
-  Future<int> getNextScheduleId() async {
-    final storedData = await _storage.read(key: "medication_schedules");
-    List<dynamic> schedules = storedData != null ? jsonDecode(storedData) : [];
-    return schedules.isEmpty ? 1 : schedules.last["id"] + 1;
-  }
-
   Future<void> saveSchedule(BuildContext context) async {
     try {
-      final newId = await getNextScheduleId();
+      final String? storedData =
+          await _storage.read(key: "medication_schedules");
+      List<Map<String, dynamic>> schedules = storedData != null
+          ? List<Map<String, dynamic>>.from(jsonDecode(storedData))
+          : [];
 
       final newSchedule = {
-        "id": newId,
+        "id": schedules.length + 1,
+        "medicationName": medicationName,
         "startDate": startDate?.toIso8601String(),
         "endDate": endDate?.toIso8601String(),
         "selectedTime": selectedTime != null
@@ -92,10 +103,6 @@ class AddCalendarController extends ChangeNotifier {
             : null,
         "selectedDays": selectedDays,
       };
-
-      final storedData = await _storage.read(key: "medication_schedules");
-      List<dynamic> schedules =
-          storedData != null ? jsonDecode(storedData) : [];
 
       schedules.add(newSchedule);
       await _storage.write(
@@ -105,7 +112,8 @@ class AddCalendarController extends ChangeNotifier {
         const SnackBar(content: Text("Agenda salva com sucesso!")),
       );
 
-      logSavedSchedules();
+      await logSavedSchedules();
+      Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Erro ao salvar agenda: $e")),
@@ -122,6 +130,7 @@ class AddCalendarController extends ChangeNotifier {
       log("📌 **Lista de Agendas Salvas:**");
       for (var schedule in schedules) {
         log("🔹 ID: ${schedule['id']}");
+        log("🔹 Medicamento: ${schedule['medicationName']}");
         log("🗓 Data de Início: ${schedule['startDate']}");
         log("🗓 Data de Término: ${schedule['endDate']}");
         log("⏰ Horário: ${schedule['selectedTime']}");
