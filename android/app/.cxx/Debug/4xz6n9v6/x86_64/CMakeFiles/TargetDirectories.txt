@@ -1,0 +1,2 @@
+C:/Users/rafae/Documents/GitHub/app_flutter/android/app/.cxx/Debug/4xz6n9v6/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/rafae/Documents/GitHub/app_flutter/android/app/.cxx/Debug/4xz6n9v6/x86_64/CMakeFiles/rebuild_cache.dir

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 
+import '../../../widget/services/notification_service.dart';
+
 class AddCalendarController extends ChangeNotifier {
   List<bool> selectedDays = List.generate(7, (index) => false);
   DateTime? startDate;
@@ -104,6 +106,39 @@ class AddCalendarController extends ChangeNotifier {
         "selectedDays": selectedDays,
       };
 
+      // Verifica os dias selecionados e agenda a notificação para cada um
+      for (int i = 0; i < selectedDays.length; i++) {
+        if (selectedDays[i]) {
+          // Calcula a data para o dia selecionado
+          DateTime notificationDate = startDate ?? DateTime.now();
+
+          // Ajusta a data para o próximo dia correspondente
+          while (notificationDate.weekday != i + 1) {
+            notificationDate = notificationDate.add(Duration(days: 1));
+          }
+
+          // Ajusta a data para o horário selecionado
+          if (selectedTime != null) {
+            notificationDate = DateTime(
+              notificationDate.year,
+              notificationDate.month,
+              notificationDate.day,
+              selectedTime!.hour,
+              selectedTime!.minute,
+            );
+          }
+
+          /*   // Agendar a notificação para cada dia selecionado
+          await NotificationService.scheduleNotification(
+            id: DateTime.now().millisecondsSinceEpoch ~/ 1000, // ID único
+            title: "Hora do medicamento",
+            body: "Está na hora de tomar $medicationName!",
+            scheduledDate: notificationDate,
+          ); */
+        }
+      }
+
+      // Salva o agendamento no armazenamento seguro
       schedules.add(newSchedule);
       await _storage.write(
           key: "medication_schedules", value: jsonEncode(schedules));
