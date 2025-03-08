@@ -11,17 +11,9 @@ class AddCalendarController extends ChangeNotifier {
   DateTime? startDate;
   DateTime? endDate;
   TimeOfDay? selectedTime;
-  String medicationName = ""; // Nome do medicamento
+  String medicationName = "";
 
-  final List<String> weekDays = [
-    "Dom",
-    "Seg",
-    "Ter",
-    "Qua",
-    "Qui",
-    "Sex",
-    "Sáb"
-  ];
+  final List<String> weekDays = ["D", "S", "T", "Q", "Q", "S", "S"];
 
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
@@ -106,18 +98,14 @@ class AddCalendarController extends ChangeNotifier {
         "selectedDays": selectedDays,
       };
 
-      // Verifica os dias selecionados e agenda a notificação para cada um
       for (int i = 0; i < selectedDays.length; i++) {
         if (selectedDays[i]) {
-          // Calcula a data para o dia selecionado
           DateTime notificationDate = startDate ?? DateTime.now();
 
-          // Ajusta a data para o próximo dia correspondente
           while (notificationDate.weekday != i + 1) {
             notificationDate = notificationDate.add(Duration(days: 1));
           }
 
-          // Ajusta a data para o horário selecionado
           if (selectedTime != null) {
             notificationDate = DateTime(
               notificationDate.year,
@@ -128,17 +116,15 @@ class AddCalendarController extends ChangeNotifier {
             );
           }
 
-          /*   // Agendar a notificação para cada dia selecionado
           await NotificationService.scheduleNotification(
-            id: DateTime.now().millisecondsSinceEpoch ~/ 1000, // ID único
+            id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
             title: "Hora do medicamento",
             body: "Está na hora de tomar $medicationName!",
             scheduledDate: notificationDate,
-          ); */
+          );
         }
       }
 
-      // Salva o agendamento no armazenamento seguro
       schedules.add(newSchedule);
       await _storage.write(
           key: "medication_schedules", value: jsonEncode(schedules));

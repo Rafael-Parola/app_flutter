@@ -13,6 +13,7 @@ class AddCalendarPage extends StatefulWidget {
 class _AddCalendarPageState extends State<AddCalendarPage> {
   late AddCalendarController _controller;
   final TextEditingController _medicationController = TextEditingController();
+  bool _isDateEnabled = false;
 
   @override
   void initState() {
@@ -44,10 +45,12 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Nome do medicamento:",
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
+                  Center(
+                    child: Text(
+                      "Nome do medicamento:",
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
                   ),
                   const SizedBox(height: 8),
                   TextField(
@@ -62,71 +65,126 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "Data de início:",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            ElevatedButton(
-                              onPressed: () =>
-                                  controller.selectDate(context, true),
-                              child: Text(controller
-                                  .getFormattedDate(controller.startDate)),
-                            ),
-                          ],
+                  Container(
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      "Data de início:",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: _isDateEnabled
+                                          ? () => controller.selectDate(
+                                              context, true)
+                                          : null,
+                                      child: Text(controller.getFormattedDate(
+                                          controller.startDate)),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      "Data de término:",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: _isDateEnabled
+                                          ? () => controller.selectDate(
+                                              context, false)
+                                          : null,
+                                      child: Text(controller.getFormattedDate(
+                                          controller.endDate)),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "Data de término:",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            ElevatedButton(
-                              onPressed: () =>
-                                  controller.selectDate(context, false),
-                              child: Text(controller
-                                  .getFormattedDate(controller.endDate)),
-                            ),
-                          ],
+                        Positioned(
+                          top: -15,
+                          right: 70,
+                          child: Row(
+                            children: [
+                              Checkbox(
+                                value: _isDateEnabled,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    _isDateEnabled = value ?? false;
+                                  });
+                                },
+                              ),
+                              const Text('Definir data de início e fim'),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    "Dias da semana:",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  Center(
+                    child: const Text(
+                      "Dias da semana:",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                  Wrap(
-                    spacing: 8.0,
-                    children:
-                        List.generate(controller.weekDays.length, (index) {
-                      return FilterChip(
-                        label: Text(controller.weekDays[index]),
-                        selected: controller.selectedDays[index],
-                        onSelected: (selected) => controller.toggleDay(index),
-                      );
-                    }),
+                  Center(
+                    child: Wrap(
+                      spacing: 5.0,
+                      children:
+                          List.generate(controller.weekDays.length, (index) {
+                        return FilterChip(
+                          label: Text(controller.weekDays[index]),
+                          selected: controller.selectedDays[index],
+                          selectedColor: Colors.green.shade400,
+                          backgroundColor: Colors.white,
+                          onSelected: (selected) {
+                            controller.toggleDay(index);
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          showCheckmark: false,
+                        );
+                      }),
+                    ),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    "Horário do medicamento:",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  Center(
+                    child: const Text(
+                      "Horário do medicamento:",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                  ElevatedButton(
-                    onPressed: () => controller.selectTime(context),
-                    child: Text(controller.getFormattedTime(context)),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () => controller.selectTime(context),
+                      child: Text(controller.getFormattedTime(context)),
+                    ),
                   ),
                 ],
               ),
