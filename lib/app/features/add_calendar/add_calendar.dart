@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../../widget/cutom_app_bar/custom_app_bar.dart';
 import 'controller/calendar_controller.dart';
@@ -25,6 +28,17 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
   void dispose() {
     _medicationController.dispose();
     super.dispose();
+  }
+
+  Future<void> _requestNotificationPermission() async {
+    PermissionStatus notification = await Permission.notification.request();
+    PermissionStatus alarm = await Permission.scheduleExactAlarm.request();
+    //scheduledAlarms
+    if (notification.isGranted && alarm.isGranted) {
+      log("Permissão de notificação concedida.");
+    } else {
+      log("Permissão de notificação não concedida.");
+    }
   }
 
   @override
@@ -198,7 +212,8 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
             width: double.infinity,
             height: 50,
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                await _requestNotificationPermission();
                 _controller.setMedicationName(_medicationController.text);
                 _controller.saveSchedule(context);
               },
